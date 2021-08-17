@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/about.png</file>
+        <file>resources/annotation.png</file>
+        <file>resources/changedir.png</file>
+        <file>resources/close.png</file>
+        <file>resources/create.png</file>
+        <file>resources/edit.png</file>
+        <file>resources/exit.png</file>
+        <file>resources/model.png</file>
+        <file>resources/next.png</file>
+        <file>resources/open_directory.png</file>
+        <file>resources/previous.png</file>
+        <file>resources/redo.png</file>
+        <file>resources/remove.png</file>
+        <file>resources/reset.png</file>
+        <file>resources/save.png</file>
+        <file>resources/tutorials.png</file>
+        <file>resources/undu.png</file>
+        <file>resources/open_single.png</file>
+    </qresource>
+</RCC>
