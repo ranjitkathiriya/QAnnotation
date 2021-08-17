@@ -37,15 +37,16 @@ void MainWindow::viewListImageview(QString imagepath)
     ui->label->setPixmap(m_logo_pic);
     ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     // ROS Service Here.
+
+    QStringList query = imagepath.split(".");
+    createboundingBox(path+"/"+query[0]);
 }
 
 // List view Double click for opening image in lbl.
 void MainWindow::on_listView_doubleClicked(const QModelIndex &index)
 {
+
     viewListImageview(index.data().toString());
-//    m_logo_pic.load(path+"/"+index.data().toString());
-//    ui->label->setPixmap(m_logo_pic);
-//    ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 // Directory for image select
@@ -56,7 +57,7 @@ void MainWindow::on_actionSave_Label_Directory_triggered()
 
     QStringListModel *model = new QStringListModel(this);
     QDir directory(path+"/");
-    QStringList images = directory.entryList(QStringList() << "*.jpg" << "*.JPG",QDir::Files);
+    QStringList images = directory.entryList(QStringList() <<"*.png" << "*.jpg" << "*.JPG",QDir::Files);
     model->setStringList(images);
     ui->listView->setModel(model);
 }
@@ -150,8 +151,8 @@ void MainWindow::createboundingBox(QString fullpath){
     QFile file(fullpath+".txt");
     QString line;
     int line_count=0;
-
-    qDebug()<< m_logo_pic.width() << m_logo_pic.height();
+    QStringList list;
+//    model1 = new QStringListModel(this);
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
         QTextStream stream(&file);
@@ -160,25 +161,187 @@ void MainWindow::createboundingBox(QString fullpath){
             line_count++;
             QStringList list1 = line.split(' ');
 
-            qDebug()<< list1[0] << QString::number(line_count);
+            int x = qRound((list1[1].toDouble() - list1[3].toDouble() / 2) * m_logo_pic.width());
+            int y = qRound((list1[2].toDouble() - list1[4].toDouble() / 2) * m_logo_pic.height());
+            int w = qRound((list1[1].toDouble() + list1[3].toDouble() / 2) * m_logo_pic.width());
+            int h = qRound((list1[2].toDouble() + list1[4].toDouble() / 2) * m_logo_pic.height());
+
+            QPainter painter(&m_logo_pic);
+            QPen Red((Qt::black),8);
+            painter.setPen(Red);
+
+            painter.setFont(QFont("times",40,QFont::ExtraBold));
+
+            painter.drawRect(x,y,w-x,h-y);
+            painter.drawText(x, y-10, "Label "+ QString::number(line_count));
+            ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+            list<< "Label_"+ QString::number(line_count);
+        }
+        model1 = new QStringListModel(this);
+        model1->setStringList(list);
+        ui->listView_2->setModel(model1);
+        file.close();
+    }
+    else{
+        list<<"Null";
+        model1 = new QStringListModel(this);
+        model1->setStringList(list);
+        ui->listView_2->setModel(model1);
+        file.close();
+    }
+}
+
+void MainWindow::on_listView_2_doubleClicked(const QModelIndex &index)
+{
+    count_list2 = index.data().toString().split("_")[1].toInt();
+    QStringList pathLast = ui->listView->currentIndex().data().toString().split(".");
+    QFile file(path+"/"+pathLast[0]+".txt");
+    QString line;
+    int line_count=1;
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream stream(&file);
+        while (!stream.atEnd()){
+            line = stream.readLine();
+            if(index.data().toString().split("_")[1].toInt() == line_count){
+                QStringList list1 = line.split(' ');
+                int x = qRound((list1[1].toDouble() - list1[3].toDouble() / 2) * m_logo_pic.width());
+                int y = qRound((list1[2].toDouble() - list1[4].toDouble() / 2) * m_logo_pic.height());
+                int w = qRound((list1[1].toDouble() + list1[3].toDouble() / 2) * m_logo_pic.width());
+                int h = qRound((list1[2].toDouble() + list1[4].toDouble() / 2) * m_logo_pic.height());
+                QPainter painter(&m_logo_pic);
+                QPen Red((Qt::green),8);
+                painter.setPen(Red);
+                painter.setFont(QFont("times",40,QFont::ExtraBold));
+                painter.drawRect(x,y,w-x,h-y);
+                painter.drawText(x, y-10, "Label "+ QString::number(line_count));
+                ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            }else{
+                QStringList list1 = line.split(' ');
+                int x = qRound((list1[1].toDouble() - list1[3].toDouble() / 2) * m_logo_pic.width());
+                int y = qRound((list1[2].toDouble() - list1[4].toDouble() / 2) * m_logo_pic.height());
+                int w = qRound((list1[1].toDouble() + list1[3].toDouble() / 2) * m_logo_pic.width());
+                int h = qRound((list1[2].toDouble() + list1[4].toDouble() / 2) * m_logo_pic.height());
+                QPainter painter(&m_logo_pic);
+                QPen Red((Qt::black),8);
+                painter.setPen(Red);
+                painter.setFont(QFont("times",40,QFont::ExtraBold));
+                painter.drawRect(x,y,w-x,h-y);
+                painter.drawText(x, y-10, "Label "+ QString::number(line_count));
+                ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            }
+            line_count++;
+        }
+    }
+    file.close();
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString selfilter = tr("JPEG (*.jpg *.jpeg)");
+    QString fileName = QFileDialog::getOpenFileName(
+            this,
+            "Select File",
+            "/home",
+            tr("All files (*.*);;JPEG (*.jpg *.jpeg);;TIFF (*.tif)" ),
+            &selfilter);
+
+    QStringListModel *model = new QStringListModel(this);
+    int pos = fileName.lastIndexOf(QChar('/'));
+    qDebug() << fileName.split("/").takeLast();
+    path = fileName.left(pos);
+    QStringList list = model->stringList();
+    list.append(fileName.split("/").takeLast());
+    model->setStringList(list);
+    ui->listView->setModel(model);
+}
+
+void MainWindow::on_actionReset_All_triggered()
+{
+    qDebug()<< ui->listView->currentIndex().data().toString().split(".")[0];
+
+    QMessageBox::StandardButton reply;
+      reply = QMessageBox::question(this, "Delete", "Are you sure you want to delete labeling file?",
+                                    QMessageBox::Yes|QMessageBox::No);
+      if (reply == QMessageBox::Yes) {
+        QFile::remove(path+"/"+ui->listView->currentIndex().data().toString().split(".")[0]+".txt");
+
+        QStringList list;
+        list<<"Null";
+        model1 = new QStringListModel(this);
+        model1->setStringList(list);
+        ui->listView_2->setModel(model1);
+      }
+      // Call images label rect function -> that need's to create.
+}
+
+void MainWindow::on_actionRemove_RectBox_triggered()
+{
+    qDebug()<< ui->listView->currentIndex().data().toString();
+    qDebug()<<count_list2;
+    int counter = 1;
+
+    QFile file(path+"/"+ui->listView->currentIndex().data().toString().split(".")[0]+".txt");
+    if(file.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        QString s;
+        QTextStream t(&file);
+        while(!t.atEnd())
+        {
+            QString line = t.readLine();
+            qDebug()<< line;
+
+            if(counter != count_list2)
+                s.append(line + "\n");
+            counter ++;
+        }
+        file.resize(0);
+        t << s;
+        file.close();
+    }
+
+    viewListImageview(ui->listView->currentIndex().data().toString());
+
+    QString line;
+    int line_count=0;
+    QStringList list;
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream stream(&file);
+        while (!stream.atEnd()){
+            line = stream.readLine();
+            line_count++;
+            QStringList list1 = line.split(' ');
 
             int x = qRound((list1[1].toDouble() - list1[3].toDouble() / 2) * m_logo_pic.width());
             int y = qRound((list1[2].toDouble() - list1[4].toDouble() / 2) * m_logo_pic.height());
             int w = qRound((list1[1].toDouble() + list1[3].toDouble() / 2) * m_logo_pic.width());
             int h = qRound((list1[2].toDouble() + list1[4].toDouble() / 2) * m_logo_pic.height());
 
-            qDebug()<<x <<y <<w <<h;
-
             QPainter painter(&m_logo_pic);
-            QPen Red((Qt::green),8);
+            QPen Red((Qt::black),8);
             painter.setPen(Red);
+
+            painter.setFont(QFont("times",40,QFont::ExtraBold));
+
             painter.drawRect(x,y,w-x,h-y);
+            painter.drawText(x, y-10, "Label "+ QString::number(line_count));
             ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+            list<< "Label_"+ QString::number(line_count);
         }
+        model1 = new QStringListModel(this);
+        model1->setStringList(list);
+        ui->listView_2->setModel(model1);
+        file.close();
     }
-    file.close();
+    else{
+        list<<"Null";
+        model1 = new QStringListModel(this);
+        model1->setStringList(list);
+        ui->listView_2->setModel(model1);
+        file.close();
+    }
 }
-
-
-
 

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStringListModel>
+#include <QFile>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,12 +17,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 private slots:
     void on_listView_doubleClicked(const QModelIndex &index);
 
     void on_actionSave_Label_Directory_triggered();
-
 
     void on_actionNext_triggered();
 
@@ -34,16 +34,24 @@ private slots:
 
     void on_actionAbout_2_triggered();
 
-
     void on_actionTutorial_triggered();
 
-
     void on_actionCreate_Rectbox_triggered();
+
+    void on_listView_2_doubleClicked(const QModelIndex &index);
+
+    void on_actionOpen_triggered();
+
+    void on_actionRemove_RectBox_triggered();
+
+    void on_actionReset_All_triggered();
 
 private:
     Ui::MainWindow *ui;
     QString path;
     QPixmap m_logo_pic;
+    QStringListModel *model1;
+    int count_list2;
 
 public:
     void viewListImageview(QString imagepath);
