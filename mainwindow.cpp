@@ -15,9 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->label->setMouseTracking(false);
 
-    connect(ui->label, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_Current_Pos()));
-    connect(ui->label, SIGNAL(Mouse_Pressed()), this, SLOT(Mouse_Pressed()));
-    connect(ui->label, SIGNAL(Mouse_Release()), this, SLOT(Mouse_Release()));
+
 }
 
 MainWindow::~MainWindow()
@@ -357,6 +355,12 @@ void MainWindow::on_actionRemove_RectBox_triggered()
 void MainWindow::on_actionCreate_Rectbox_triggered()
 {
     ui->label->setCursor(Qt::CrossCursor);
+
+    connect(ui->label, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_Current_Pos()));
+    connect(ui->label, SIGNAL(Mouse_Pressed()), this, SLOT(Mouse_Pressed()));
+    connect(ui->label, SIGNAL(Mouse_Release()), this, SLOT(Mouse_Release()));
+
+    // Check mouse click events it is there in line 26-56
     // 1. Select image then Image will be display in left listview and then after selecting I should be able to create rectangle box with the same as image coordinate.
         // Just like this video i should be able to create bounding box(Rectangle) https://www.youtube.com/watch?v=p0nR2YsCY_U&ab_channel=TzuTaLin
     // 2. display that image coordinate here. that's it.
