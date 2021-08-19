@@ -13,8 +13,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->label->setAlignment (Qt::AlignCenter);
 
-    ui->label->setMouseTracking(false);
+    ui->label->setMouseTracking(true);
+    ui->label->setCursor(Qt::CrossCursor);
 
+    connect(ui->label, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_Current_Pos()));
+    connect(ui->label, SIGNAL(Mouse_Pressed()), this, SLOT(Mouse_Pressed()));
+    connect(ui->label, SIGNAL(Mouse_Release()), this, SLOT(Mouse_Release()));
+    qDebug() << "label size is " << ui->label->size();
 
 }
 
@@ -23,19 +28,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void my_qlabel::mouseReleaseEvent(QMouseEvent *ev)
-{
-    emit Mouse_Release();
-}
-
 
 void MainWindow::Mouse_Current_Pos()
 {
+    qDebug () << "event Mouse_Current_Pos, x " << point1.x() << ", " << point1.y();
+    QPixmap m_logo_pic_buff = m_logo_pic;
+    QPainter painter(&m_logo_pic_buff);
+    QPen Red((Qt::green),8);
+    painter.setPen(Red);
+    painter.setFont(QFont("times",40,QFont::ExtraBold));
+    painter.drawRect(point1.x(), point1.y(), ui->label->rectWidth, ui->label->rectHeight);
 
+    ui->label->setPixmap(m_logo_pic_buff);
 }
 
 void MainWindow::Mouse_Pressed()
 {
+    qDebug () << "event Mouse_Pressed, x " << point1.x() << ", " << point1.y();
     point1 = QPoint(ui->label->x, ui->label->y);
     drag = 1;
 }
@@ -46,9 +55,9 @@ void MainWindow::Mouse_Release()
     QPen Red((Qt::green),8);
     painter.setPen(Red);
     painter.setFont(QFont("times",40,QFont::ExtraBold));
-    painter.drawRect(point1.x(),point1.y(),ui->label->x,ui->label->y);
+    painter.drawRect(point1.x(), point1.y(), ui->label->rectWidth, ui->label->rectHeight);
 
-    ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->label->setPixmap(m_logo_pic);
 
 }
 
@@ -56,8 +65,8 @@ void MainWindow::Mouse_Release()
 void MainWindow::viewListImageview(QString imagepath)
 {
     m_logo_pic.load(path+"/"+imagepath);
+    m_logo_pic = m_logo_pic.scaled(ui->label->width(), ui->label->height());
     ui->label->setPixmap(m_logo_pic);
-    ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     // ROS Service Here.
 
     QStringList query = imagepath.split(".");
@@ -180,7 +189,7 @@ void MainWindow::updatetxt(QString fullpath){
 
             painter.drawRect(x,y,w-x,h-y);
             painter.drawText(x, y-10, "Label "+ QString::number(line_count));
-            ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            ui->label->setPixmap(m_logo_pic);
 
             list<< "Label_"+ QString::number(line_count);
         }
@@ -222,7 +231,7 @@ void MainWindow::on_listView_2_doubleClicked(const QModelIndex &index)
                 painter.setFont(QFont("times",40,QFont::ExtraBold));
                 painter.drawRect(x,y,w-x,h-y);
                 painter.drawText(x, y-10, "Label "+ QString::number(line_count));
-                ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                ui->label->setPixmap(m_logo_pic);
             }else{
                 QStringList list1 = line.split(' ');
                 int x = qRound((list1[1].toDouble() - list1[3].toDouble() / 2) * m_logo_pic.width());
@@ -235,7 +244,7 @@ void MainWindow::on_listView_2_doubleClicked(const QModelIndex &index)
                 painter.setFont(QFont("times",40,QFont::ExtraBold));
                 painter.drawRect(x,y,w-x,h-y);
                 painter.drawText(x, y-10, "Label "+ QString::number(line_count));
-                ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                ui->label->setPixmap(m_logo_pic);
             }
             line_count++;
         }
@@ -333,7 +342,7 @@ void MainWindow::on_actionRemove_RectBox_triggered()
 
             painter.drawRect(x,y,w-x,h-y);
             painter.drawText(x, y-10, "Label "+ QString::number(line_count));
-            ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            ui->label->setPixmap(m_logo_pic.scaled(ui->label->size()));//Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
             list<< "Label_"+ QString::number(line_count);
         }
@@ -354,6 +363,7 @@ void MainWindow::on_actionRemove_RectBox_triggered()
 // Rectangle box create
 void MainWindow::on_actionCreate_Rectbox_triggered()
 {
+    qDebug() << "on_actionCreate_Rectbox_triggered";
     ui->label->setCursor(Qt::CrossCursor);
 
     connect(ui->label, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_Current_Pos()));
