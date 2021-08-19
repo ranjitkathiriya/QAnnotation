@@ -10,10 +10,12 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    my_qlabel.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    my_qlabel.h
 
 FORMS += \
     mainwindow.ui
@@ -23,8 +25,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    p2.py
+DISTFILES +=
 
 RESOURCES += \
     resources.qrc

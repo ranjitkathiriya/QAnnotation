@@ -1,18 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QtDebug>
-#include <QDir>
-#include <QStringListModel>
-#include <QString>
-#include <QFileDialog>
-#include <QProcess>
-#include <string>
-#include <QMessageBox>
-#include <QPainter>
-#include <QPen>
-#include <QColor>
-#include <QScrollArea>
-
+#include "clickable.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,16 +8,52 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->showMaximized();
+
     ui->label->setContentsMargins(0,0,0,0);
 
     ui->label->setAlignment (Qt::AlignCenter);
 
+    ui->label->setMouseTracking(false);
+
+    connect(ui->label, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_Current_Pos()));
+    connect(ui->label, SIGNAL(Mouse_Pressed()), this, SLOT(Mouse_Pressed()));
+    connect(ui->label, SIGNAL(Mouse_Release()), this, SLOT(Mouse_Release()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void my_qlabel::mouseReleaseEvent(QMouseEvent *ev)
+{
+    emit Mouse_Release();
+}
+
+
+void MainWindow::Mouse_Current_Pos()
+{
+
+}
+
+void MainWindow::Mouse_Pressed()
+{
+    point1 = QPoint(ui->label->x, ui->label->y);
+    drag = 1;
+}
+
+void MainWindow::Mouse_Release()
+{
+    QPainter painter(&m_logo_pic);
+    QPen Red((Qt::green),8);
+    painter.setPen(Red);
+    painter.setFont(QFont("times",40,QFont::ExtraBold));
+    painter.drawRect(point1.x(),point1.y(),ui->label->x,ui->label->y);
+
+    ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+}
+
 
 void MainWindow::viewListImageview(QString imagepath)
 {
@@ -39,7 +63,7 @@ void MainWindow::viewListImageview(QString imagepath)
     // ROS Service Here.
 
     QStringList query = imagepath.split(".");
-    createboundingBox(path+"/"+query[0]);
+    updatetxt(path+"/"+query[0]);
 }
 
 // List view Double click for opening image in lbl.
@@ -130,24 +154,7 @@ void MainWindow::on_actionTutorial_triggered()
     ui->label->setPixmap(m_logo_pic.scaled(w,h,Qt::KeepAspectRatio));
 }
 
-// Rectangle box create
-void MainWindow::on_actionCreate_Rectbox_triggered()
-{
-    // [((985, 94), (1308, 674)), ((1160, 550), (1412, 1077)), ((1737, 539), (2059, 1057)), ((1753, 37), (2109, 637))]
-
-//    QPainter painter(&m_logo_pic);
-//    QPen Red((Qt::green),5);
-//    painter.setPen(Red);
-//    painter.drawRect(985,94,1308-985,674-94);
-
-//    ui->label->setPixmap(m_logo_pic.scaled(ui->label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    qDebug() << path <<ui->listView->currentIndex().data().toString();
-    QStringList query = ui->listView->currentIndex().data().toString().split(".");
-    qDebug() << query[0];
-    createboundingBox(path+"/"+query[0]);
-}
-
-void MainWindow::createboundingBox(QString fullpath){
+void MainWindow::updatetxt(QString fullpath){
     QFile file(fullpath+".txt");
     QString line;
     int line_count=0;
@@ -169,6 +176,7 @@ void MainWindow::createboundingBox(QString fullpath){
             QPainter painter(&m_logo_pic);
             QPen Red((Qt::black),8);
             painter.setPen(Red);
+
 
             painter.setFont(QFont("times",40,QFont::ExtraBold));
 
@@ -344,4 +352,24 @@ void MainWindow::on_actionRemove_RectBox_triggered()
         file.close();
     }
 }
+
+// Rectangle box create
+void MainWindow::on_actionCreate_Rectbox_triggered()
+{
+    ui->label->setCursor(Qt::CrossCursor);
+    // 1. Select image then Image will be display in left listview and then after selecting I should be able to create rectangle box with the same as image coordinate.
+        // Just like this video i should be able to create bounding box(Rectangle) https://www.youtube.com/watch?v=p0nR2YsCY_U&ab_channel=TzuTaLin
+    // 2. display that image coordinate here. that's it.
+
+    // Saving function is ready with me I will make it.
+}
+
+
+
+
+
+
+
+
+
 
