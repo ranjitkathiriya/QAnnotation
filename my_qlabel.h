@@ -6,6 +6,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QPainter>
 
 class my_qlabel : public QLabel
 {
@@ -17,6 +18,8 @@ public:
     void mouseReleaseEvent(QMouseEvent *ev);
 
     int x,y;
+    int rectWidth, rectHeight;
+    bool mPressed;
 signals:
     void Mouse_Pressed();
     void Mouse_Pos();
@@ -24,6 +27,10 @@ signals:
 
 
 public slots:
+
+private:
+    QPoint mousePressed;
+    QPoint mouseReleased;
 };
 
 #endif // MY_QLABEL_H

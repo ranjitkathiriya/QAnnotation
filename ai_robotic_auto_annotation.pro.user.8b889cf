@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.2, 2021-08-20T07:42:21. -->
+<!-- Written by QtCreator 4.15.2, 2021-08-18T17:52:05. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -302,6 +302,7 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/kuka-ai/Documents/ai_robotic_annotation/build-ai_robotic_auto_annotation-Desktop_Qt_5_15_2_GCC_64bit-Release</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
