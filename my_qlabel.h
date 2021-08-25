@@ -20,6 +20,7 @@ public:
     int x,y;
     int rectWidth, rectHeight;
     bool mPressed;
+
 signals:
     void Mouse_Pressed();
     void Mouse_Pos();

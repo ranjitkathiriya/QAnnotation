@@ -151,6 +151,9 @@
     <addaction name="separator"/>
     <addaction name="actionNext"/>
     <addaction name="actionPrevious"/>
+    <addaction name="separator"/>
+    <addaction name="actionAI"/>
+    <addaction name="actionAuto_Train"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -182,10 +185,12 @@
    <addaction name="actionSave_RectBox"/>
    <addaction name="actionRemove_RectBox"/>
    <addaction name="actionReset_All"/>
+   <addaction name="actionAI"/>
    <addaction name="separator"/>
    <addaction name="actionTutorial"/>
    <addaction name="actionAbout_2"/>
    <addaction name="separator"/>
+   <addaction name="actionAuto_Train"/>
   </widget>
   <action name="actionSave_Label_Directory">
    <property name="icon">
@@ -270,6 +275,9 @@
    <property name="text">
     <string>Save RectBox</string>
    </property>
+   <property name="shortcut">
+    <string>W</string>
+   </property>
   </action>
   <action name="actionCreate_Rectbox">
    <property name="icon">
@@ -280,7 +288,7 @@
     <string>Create Rectbox</string>
    </property>
    <property name="shortcut">
-    <string>C</string>
+    <string>S</string>
    </property>
   </action>
   <action name="actionNext">
@@ -323,6 +331,27 @@
    </property>
    <property name="text">
     <string>About </string>
+   </property>
+  </action>
+  <action name="actionAI">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/ai_icon.png</normaloff>:/resources/ai_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>AI</string>
+   </property>
+   <property name="shortcut">
+    <string>Q</string>
+   </property>
+  </action>
+  <action name="actionAuto_Train">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/resources/train.png</normaloff>:/resources/train.png</iconset>
+   </property>
+   <property name="text">
+    <string>Auto Train</string>
    </property>
   </action>
  </widget>

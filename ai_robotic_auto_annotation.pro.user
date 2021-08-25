@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.2, 2021-08-20T07:42:21. -->
+<!-- Written by QtCreator 4.15.2, 2021-08-24T10:26:57. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -295,13 +295,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/kuka-ai/Documents/ai_robotic_annotation/ai_robotic_auto_annotation/ai_robotic_auto_annotation.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/kuka-ai/Documents/ai_robotic_annotation/ai_robotic_auto_annotation/ai_robotic_auto_annotation.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">ai_robotic_auto_annotation2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/kuka-ai/Documents/ai_robotic_annotation/new_work/QAnnotation/ai_robotic_auto_annotation.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/kuka-ai/Documents/ai_robotic_annotation/new_work/QAnnotation/ai_robotic_auto_annotation.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/kuka-ai/Documents/ai_robotic_annotation/build-ai_robotic_auto_annotation-Desktop_Qt_5_15_2_GCC_64bit-Release</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

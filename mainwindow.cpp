@@ -8,11 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->showMaximized();
-
     ui->label->setContentsMargins(0,0,0,0);
-
     ui->label->setAlignment (Qt::AlignCenter);
-
     ui->label->setMouseTracking(true);
 
 }
@@ -34,7 +31,6 @@ void MainWindow::Mouse_Current_Pos()
 
     ui->label->setPixmap(m_logo_pic_buff);
 
-
 }
 
 void MainWindow::Mouse_Pressed()
@@ -54,8 +50,42 @@ void MainWindow::Mouse_Release()
     ui->label->setPixmap(m_logo_pic);
 
     qDebug()<< point1.x() << point1.y() << ui->label->rectWidth << ui->label->rectHeight;
+    qDebug() << ui->label->width() << ui->label->height();
+
+    rect = QRect(point1.x(),point1.y(),ui->label->rectWidth,ui->label->rectHeight);
 
     ui->label->setCursor(Qt::ArrowCursor);
+
+
+
+    float x_scale = (float)image_width / (float)ui->label->width();
+    float y_scale = (float)image_height / (float)ui->label->height();
+
+
+    int x = qRound(rect.x() * x_scale);
+    int y = qRound(rect.y() * y_scale);
+    int w = qRound(rect.width() * x_scale);
+    int h = qRound(rect.height() * y_scale);
+
+    qDebug() << x << y << x+w <<y+h;
+
+    rect_scale = QRect(x,y,x+w,y+h);
+
+
+    double dw = (double)1./(double)image_width;
+    double dh = (double)1./(double)image_height;
+
+    double x_sclae = (((double)x + (double)x+w)/(double)2.0) * dw;
+    double y_sclae = (((double)y + (double)y+h)/(double)2.0) * dh;
+    double x_w_sclae = (((double)x+w - (double)x)) * dw;
+    double y_h_sclae = (((double)y+h - (double)y)) * dh;
+
+
+
+    result += "0 "+QString::number(x_sclae, 'f', 6) +" " + QString::number(y_sclae, 'f', 6) +" "+ QString::number(x_w_sclae, 'f', 6)+" "+ QString::number(y_h_sclae, 'f', 6)+"\n";
+
+
+    // saveTextfile code
 
     disconnect(ui->label, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_Current_Pos()));
     disconnect(ui->label, SIGNAL(Mouse_Pressed()), this, SLOT(Mouse_Pressed()));
@@ -67,6 +97,11 @@ void MainWindow::Mouse_Release()
 void MainWindow::viewListImageview(QString imagepath)
 {
     m_logo_pic.load(path+"/"+imagepath);
+
+    image_width = m_logo_pic.width();
+    image_height = m_logo_pic.height();
+
+    qDebug()<< "ON LOAD::: "<< image_height << image_width;
     m_logo_pic = m_logo_pic.scaled(ui->label->width(), ui->label->height());
     ui->label->setPixmap(m_logo_pic);
     // ROS Service Here.
@@ -216,6 +251,8 @@ void MainWindow::on_listView_2_doubleClicked(const QModelIndex &index)
     QFile file(path+"/"+pathLast[0]+".txt");
     QString line;
     int line_count=1;
+
+    qDebug()<<"WIDTH:::: "<< m_logo_pic.width();
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
         QTextStream stream(&file);
@@ -373,12 +410,39 @@ void MainWindow::on_actionCreate_Rectbox_triggered()
     connect(ui->label, SIGNAL(Mouse_Release()), this, SLOT(Mouse_Release()));
 }
 
+void MainWindow::on_actionSave_RectBox_triggered()
+{
+
+    qDebug() << result;
+    QFile file(path+"/"+ui->listView->currentIndex().data().toString().split(".")[0]+".txt");
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+        return;
+
+    QTextStream out(&file);
+
+    out << result;
+    file.close();
+
+    result.clear();
+
+    updatetxt(path+"/"+ui->listView->currentIndex().data().toString().split(".")[0]);
+}
 
 
+void MainWindow::on_actionAI_triggered()
+{
+
+}
 
 
+void MainWindow::on_listView_clicked(const QModelIndex &index)
+{
+
+}
 
 
+void MainWindow::on_actionAuto_Train_triggered()
+{
 
-
+}
 

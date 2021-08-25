@@ -18,5 +18,7 @@
         <file>resources/tutorials.png</file>
         <file>resources/undu.png</file>
         <file>resources/open_single.png</file>
+        <file>resources/ai_icon.png</file>
+        <file>resources/train.png</file>
     </qresource>
 </RCC>

@@ -58,6 +58,12 @@ private slots:
     void Mouse_Release();
 
 
+    void on_actionSave_RectBox_triggered();
+
+    void on_actionAI_triggered();
+
+    void on_listView_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
     QString path;
@@ -67,10 +73,13 @@ private:
 
     QPoint point1, point2;
     int drag = 0;
-    QRect rect;
+    QRect rect,rect_scale;
     int select_flag = 0;
 
     QPainter painter1;
+
+    int image_width,image_height;
+    QString result;
 
 public:
     void viewListImageview(QString imagepath);
